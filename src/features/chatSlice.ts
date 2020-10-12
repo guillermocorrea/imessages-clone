@@ -7,7 +7,7 @@ interface ChatState {
 }
 
 const storageKey = 'imessages-active-chat';
-const storageState = JSON.parse(localStorage.getItem(storageKey) || '');
+const storageState = JSON.parse(localStorage.getItem(storageKey) || '{}');
 
 const initialState: ChatState = {
   chatId: storageState.chatId,
