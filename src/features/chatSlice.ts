@@ -6,9 +6,12 @@ interface ChatState {
   chatName: string | null;
 }
 
+const storageKey = 'imessages-active-chat';
+const storageState = JSON.parse(localStorage.getItem(storageKey) || '');
+
 const initialState: ChatState = {
-  chatId: null,
-  chatName: null,
+  chatId: storageState.chatId,
+  chatName: storageState.chatName,
 };
 
 export const chatSlice = createSlice({
@@ -18,6 +21,7 @@ export const chatSlice = createSlice({
     setChat: (state, action: PayloadAction<ChatState>) => {
       state.chatId = action.payload.chatId;
       state.chatName = action.payload.chatName;
+      localStorage.setItem(storageKey, JSON.stringify(action.payload));
     },
   },
 });

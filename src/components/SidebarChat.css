@@ -6,6 +6,7 @@
   cursor: pointer;
 }
 
+.sidebarChat.active,
 .sidebarChat:hover {
   background-color: #3e93fd;
   color: white;

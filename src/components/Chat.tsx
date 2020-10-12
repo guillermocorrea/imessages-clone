@@ -63,21 +63,23 @@ const Chat = () => {
         </FlipMove>
       </div>
 
-      <div className='chat__input'>
-        <form onSubmit={sendMessage}>
-          <input
-            placeholder='iMessage'
-            type='text'
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button>Send Message</button>
-        </form>
+      {chatId && (
+        <div className='chat__input'>
+          <form onSubmit={sendMessage}>
+            <input
+              placeholder='iMessage'
+              type='text'
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <button>Send Message</button>
+          </form>
 
-        <IconButton>
-          <MicNoneIcon className='chat__mic' />
-        </IconButton>
-      </div>
+          <IconButton>
+            <MicNoneIcon className='chat__mic' />
+          </IconButton>
+        </div>
+      )}
     </div>
   );
 };

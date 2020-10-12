@@ -1,7 +1,7 @@
 import { Avatar } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { setChat } from '../features/chatSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectChatId, setChat } from '../features/chatSlice';
 import { db } from '../firebase';
 import './SidebarChat.css';
 import { formatTimestamp } from '../util/utils';
@@ -14,6 +14,7 @@ interface SidebarChatProps {
 const SidebarChat: React.FC<SidebarChatProps> = ({ id, chatName }) => {
   const dispatch = useDispatch();
   const [chatInfo, setChatInfo] = useState([] as any[]);
+  const chatId = useSelector(selectChatId);
 
   useEffect(() => {
     db.collection('chats')
@@ -35,7 +36,7 @@ const SidebarChat: React.FC<SidebarChatProps> = ({ id, chatName }) => {
           })
         );
       }}
-      className='sidebarChat'
+      className={`sidebarChat ${chatId === id && 'active'}`}
     >
       <Avatar src={chatInfo[0]?.photo} />
       <div className='sidebarChat__info'>
