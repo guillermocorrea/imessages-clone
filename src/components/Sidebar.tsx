@@ -5,8 +5,9 @@ import { RateReviewOutlined } from '@material-ui/icons';
 import './Sidebar.css';
 import SidebarChat from './SidebarChat';
 import { selectUser } from '../features/userSlice';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { auth, db } from '../firebase';
+import { selectChatFilter, setFilter } from '../features/chatSlice';
 
 interface Chat {
   id: string;
@@ -16,16 +17,18 @@ interface Chat {
 const Sidebar = () => {
   const user = useSelector(selectUser);
   const [chats, setChats] = useState([] as Chat[]);
+  const [input, setInput] = useState('');
+  const dispatch = useDispatch();
+  const filter = useSelector(selectChatFilter);
 
   useEffect(() => {
     const unsubscribe = db.collection('chats').onSnapshot((snapshot) => {
-      console.log(snapshot.docs);
-      setChats(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data() as any,
-        }))
-      );
+      const docs = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        data: doc.data() as any,
+      }));
+
+      setChats(docs);
     });
     return () => unsubscribe();
   }, []);
@@ -39,6 +42,17 @@ const Sidebar = () => {
     }
   };
 
+  const handleSearch = (e: any) => {
+    setInput(e.target.value);
+    dispatch(setFilter(e.target.value));
+  };
+
+  const filteredChats = filter
+    ? chats.filter((chat) =>
+        chat.data.chatName.toLowerCase().includes(filter.toLowerCase())
+      )
+    : chats;
+
   return (
     <div className='sidebar'>
       <div className='sidebar__header'>
@@ -49,7 +63,12 @@ const Sidebar = () => {
         />
         <div className='sidebar__input'>
           <SearchIcon />
-          <input type='text' placeholder='Search...' />
+          <input
+            value={input}
+            onChange={handleSearch}
+            type='text'
+            placeholder='Search...'
+          />
         </div>
 
         <IconButton onClick={addChat} className='sidebar__inputButton'>
@@ -57,7 +76,7 @@ const Sidebar = () => {
         </IconButton>
       </div>
       <div className='sidebar__chats'>
-        {chats.map(({ id, data: { chatName } }) => (
+        {filteredChats.map(({ id, data: { chatName } }) => (
           <SidebarChat key={id} id={id} chatName={chatName} />
         ))}
       </div>
