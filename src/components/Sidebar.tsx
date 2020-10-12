@@ -66,7 +66,7 @@ const Sidebar = () => {
           <input
             value={input}
             onChange={handleSearch}
-            type='text'
+            type='search'
             placeholder='Search...'
           />
         </div>
